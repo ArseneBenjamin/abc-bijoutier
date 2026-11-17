@@ -229,6 +229,17 @@
   .lightbox.single .lb-prev, .lightbox.single .lb-next { display: none; }
   body.lb-lock { overflow: hidden; } /* bloque le défilement de la page derrière */
 
+  /* ---------- Ordinateur uniquement (écrans de plus de 720 px) ----------
+     - le logo est doublé (gauche + droite) : le texte se retrouve centré ;
+     - la bio prend toute la largeur, comme les photos + descriptions.
+     Sur téléphone, rien de tout cela ne s'applique : la bannière et la bio
+     restent comme avant. */
+  .logo-right { display: none; }          /* caché par défaut (téléphone) */
+  @media (min-width: 721px) {
+    .logo-right { display: block; }
+    .bio { max-width: none; width: 100%; } /* même largeur que les créations */
+  }
+
   /* ---------- Téléphone (écrans de 720 px ou moins) ----------
      Logo plus petit, images au-dessus des textes, flèches de la
      galerie placées en bas pour rester accessibles au pouce. */
@@ -260,6 +271,9 @@
       <h1><span class="nb">Arsène-Benjamin</span> Cayeux</h1>
       <p>Bijoutier</p>
     </div>
+    <!-- 2e logo (ordinateur seulement) : copie du 1er, il équilibre la bannière
+         pour que le texte soit parfaitement centré. Masqué sur téléphone. -->
+    <div class="logo-space logo-right" aria-hidden="true"><div class="logo"></div></div>
   </header>
 
   <!-- BIO : texte de présentation + lien vers Instagram -->
@@ -539,6 +553,15 @@
    2) faire défiler les photos (flèches, clavier, balayage),
    3) la refermer. */
 (function () {
+  // Copie le logo de gauche dans le cadre de droite (ordinateur)
+  var logoL = document.querySelector('.logo-space:not(.logo-right) .logo img');
+  var logoR = document.querySelector('.logo-right .logo');
+  if (logoL && logoR) {
+    var c = logoL.cloneNode(true);
+    c.alt = '';
+    logoR.appendChild(c);
+  }
+
   // Éléments de la page dont on a besoin
   var box = document.getElementById('lightbox');
   var big = document.getElementById('lb-img');
